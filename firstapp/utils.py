@@ -38,7 +38,7 @@ def is_within_geofence(latitude, longitude):
     geofenceLongitude = os.environ.get('LONGITUDE')
     geofence_center = (geofenceLatitude, geofenceLongitude)
     # 22.6042641, 75.6855095
-    geofence_radius = 100
+    geofence_radius = 1000
     distance = geodesic((latitude, longitude), geofence_center).meters
     print(distance, geofence_radius)
     return distance <= geofence_radius
