@@ -400,8 +400,7 @@ class StudentAfterLoginPanelView(APIView):
         student_user = get_object_or_404(Student, email=request.user.email)
 
         present_days = Attendance.objects.filter(student=student_user, status='Present').count()
-        absent_days = Attendance.objects.filter(student=student_user, status='Absent').count()
-        Total_days = present_days + absent_days
+        absent_days = 0
         # student_user = request.user
         obj = Student.objects.filter(email = request.user).first()
         starting_date = obj.created_at
@@ -418,6 +417,8 @@ class StudentAfterLoginPanelView(APIView):
             attendenceRecord[str(i)] = "Present"
           else:
             attendenceRecord[str(i)] = "Absent" 
+            absent_days += 1
+        Total_days = present_days + absent_days
         
         student_user = request.user
         metrics_data = {
