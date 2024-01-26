@@ -392,58 +392,51 @@ class AttendenceManageMentSectionView(ListCreateAPIView):
 
 
 class StudentAfterLoginPanelView(APIView):
-    permission_classes = [IsAuthenticated]
+  permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        try:
-            student_user = get_object_or_404(Student, email=request.user.email)
+  def get(self, request, *args, **kwargs):
+    try:
+       
+        student_user = get_object_or_404(Student, email=request.user.email)
 
-            present_days = Attendance.objects.filter(
-                student=student_user, status="Present"
-            ).count()
-            absent_days = Attendance.objects.filter(
-                student=student_user, status="Absent"
-            ).count()
-            Total_days = present_days + absent_days
-            obj = Student.objects.filter(email=request.user).first()
-            starting_date = obj.created_at
-            original_datetime = datetime.strptime(
-                str(starting_date), "%Y-%m-%d %H:%M:%S.%f%z"
-            )
-            start_date = original_datetime.date()
-            end_date = datetime.now().date()
-            PresentdateList = []
-            for i in Attendance.objects.filter(student=student_user, status="Present"):
-                PresentdateList.append(i.date)
-            range_date_list = [
-                start_date + timedelta(days=x)
-                for x in range((end_date - start_date).days + 1)
-            ]
-            attendenceRecord = {}
-            for i in range_date_list:
-                if i in PresentdateList:
-                    attendenceRecord[str(i)] = "Present"
-                else:
-                    attendenceRecord[str(i)] = "Absent"
+        present_days = Attendance.objects.filter(student=student_user, status='Present').count()
+        absent_days = Attendance.objects.filter(student=student_user, status='Absent').count()
+        Total_days = present_days + absent_days
+        # student_user = request.user
+        obj = Student.objects.filter(email = request.user).first()
+        starting_date = obj.created_at
+        original_datetime = datetime.strptime(str(starting_date), '%Y-%m-%d %H:%M:%S.%f%z')
+        start_date = original_datetime.date()
+        end_date = datetime.now().date()
+        PresentdateList = []
+        for i in Attendance.objects.filter(student=student_user, status='Present'):
+          PresentdateList.append(i.date)        
+        range_date_list = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+        attendenceRecord = {}
+        for i in range_date_list:
+          if i in PresentdateList:
+            attendenceRecord[str(i)] = "Present"
+          else:
+            attendenceRecord[str(i)] = "Absent" 
+        
+        student_user = request.user
+        metrics_data = {
+            'Roll_Number' : obj.roll_number,
+            'student_name': obj.name,  
+            'student_email': student_user.email,
+            'total_days': Total_days, 
+            'present_days': present_days,
+            'absent_days':  absent_days,
+            'attendenceRecord':attendenceRecord,
+        }
 
-            student_user = request.user
-            metrics_data = {
-                "Roll_Number": obj.roll_number,
-                "student_name": obj.name,
-                "student_email": student_user.email,
-                "total_days": Total_days,
-                "present_days": present_days,
-                "absent_days": absent_days,
-                "attendenceRecord": attendenceRecord,
-            }
-            serializer = StudentAfterLoginPanelSerializer(metrics_data)
-            serialized_data = serializer.data
-            return Response(serialized_data, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        serializer = StudentAfterLoginPanelSerializer(metrics_data)
+        serialized_data = serializer.data
 
+        return Response(serialized_data, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # core code generation
 
