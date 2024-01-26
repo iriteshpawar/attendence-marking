@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -174,6 +175,11 @@ SIMPLE_JWT = {
 }
 
 PASSWORD_RESET_TIMEOUT=900         # 900 Sec = 15 Min
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -181,3 +187,4 @@ CORS_ALLOWED_ORIGINS = [
     "https://ezmark.vercel.app"
     
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"
