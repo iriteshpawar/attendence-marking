@@ -103,7 +103,7 @@ class StudentSendPasswordResetEmailSerializer(serializers.Serializer):
             sid = urlsafe_base64_encode(force_bytes(student.roll_number))
             # print(sid)
             token = PasswordResetTokenGenerator().make_token(student)
-            link = "https://ezmark.vercel.app/api/user/reset/" + sid + "/" + token
+            link = "https://ezmark.vercel.app/reset-password-student/" + sid + "/" + token
             body = "Click Following Link to Reset Your Password " + link
             data = {
                 "subject": "Reset Your Password",
@@ -173,7 +173,7 @@ class AdminSendPasswordResetEmailSerializer(serializers.Serializer):
             aid = urlsafe_base64_encode(force_bytes(admin.admin_id))
             # print(sid)
             token = PasswordResetTokenGenerator().make_token(admin)
-            link = "https://ezmark.vercel.app/api/user/reset/" + aid + "/" + token
+            link = "https://ezmark.vercel.app/reset-password/" + aid + "/" + token
             body = "Click Following Link to Reset Your Password " + link
             data = {
                 "subject": "Reset Your Password",
