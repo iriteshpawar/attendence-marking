@@ -497,7 +497,7 @@ class GetAttendenceByDateView(APIView):
                     status_text = "Not available"
                 else:
                     status_text = "Absent"
-                response_data = {
+            response_data = {
                     # 'student_email': request.user.email,
                     "requested_date": requested_date_str,
                     "attendance_status": status_text,
