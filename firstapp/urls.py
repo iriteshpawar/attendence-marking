@@ -16,7 +16,8 @@ from .views import (
     StudentAfterLoginPanelView,
     GenerateQRCodeView,
     MarkAttendanceDynamicQRView,
-    GetAttendenceByDateView
+    GetAttendenceByDateView,
+    UpdateGeofenceView
 )
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -314,5 +315,6 @@ urlpatterns = [
     path('student/dashboard/', StudentAfterLoginPanelView.as_view(), name = "student-login-view"),    #15
     path('student/generate-qr-code/', GenerateQRCodeView.as_view(), name='generate-qr-code'),     #16
     path('student/MarkAttendanceDynamicQRView/',MarkAttendanceDynamicQRView.as_view(), name = "Mark-Attendance-Dynamic"),  #17
-    path('student/get-attendence-by-date/',GetAttendenceByDateView.as_view(), name="get_attendence_by_date")  #18
+    path('student/get-attendence-by-date/',GetAttendenceByDateView.as_view(), name="get_attendence_by_date"),  #18
+    path('update/geofence/',UpdateGeofenceView.as_view(), name = "update_geofence")  #19
 ]
