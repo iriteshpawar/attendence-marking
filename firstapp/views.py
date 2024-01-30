@@ -20,6 +20,7 @@ from .serializers import (
     AttendanceManagementSectionSerializer,
     StudentAfterLoginPanelSerializer,
     StudentAttendenceByDateSerializer,
+    UpdateGeofenceSerializer,
 )
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
@@ -28,7 +29,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import date, datetime, timedelta
 from .utils import is_within_geofence
-from .models import Student, Attendance, PendingRequest, Admin
+from .models import Student, Attendance, PendingRequest, Admin, GPS
 
 
 # Generate token manually for student
@@ -543,3 +544,19 @@ class MarkAttendanceDynamicQRView(APIView):
             )
         Attendance.objects.create(student=student, date=date, status="Present")
         return Response({"msg": "Attendance marked successfully."}, status=200)
+
+
+
+class UpdateGeofenceView(APIView):
+    def put(self, request, *args, **kwargs):
+        try:
+            instance = GPS.objects.first()
+        except GPS.DoesNotExist:
+            return Response({"error": "GPS instance not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UpdateGeofenceSerializer(instance, data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"msg":"success"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
