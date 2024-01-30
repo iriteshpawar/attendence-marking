@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Admin, Student, Attendance, User, PendingRequest
+from .models import Admin, Student, Attendance, User, PendingRequest, GPS
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -278,3 +278,25 @@ class StudentAttendenceByDateSerializer(serializers.Serializer):
             "requested_date": instance["requested_date"],
             "attendance_status": instance["attendance_status"],
         }
+
+
+class UpdateGeofenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GPS
+        fields = ['latitude', 'longitude', 'area', 'secretToken']
+    def validate(self, attrs):
+        
+        insatncegps = GPS.objects.first()
+        if(attrs.get("secretToken") != insatncegps.secretToken):
+            raise serializers.ValidationError(
+                "Secret token not matching"
+            )
+        return attrs
+
+    def update(self, instance, validated_data):
+        instance.latitude = validated_data.get('latitude', instance.latitude)
+        instance.longitude = validated_data.get('longitude', instance.longitude)
+        instance.area = validated_data.get('area', instance.area)
+        instance.secretToken = validated_data.get('secretToken', instance.secretToken)
+        instance.save()
+        return instance
