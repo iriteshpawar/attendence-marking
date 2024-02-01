@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import *
-from django.db import models
+from .models import User, Admin, Student, PendingRequest, Attendance, GPS
+
 
 class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'name', 'mobile_number', 'is_admin', 'created_at', 'updated_at')

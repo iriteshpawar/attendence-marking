@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     StudentRegistrationView,
-    adminRegistrationView,
+    AdminRegistrationView,
     StudentloginView,
     AdminloginView,   
     PendingRequestView,
@@ -300,7 +300,7 @@ by bellow url
 urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), #1
     path('register/student/', StudentRegistrationView.as_view(), name = 'StudentRegister'), #2
-    path('register/admin/', adminRegistrationView.as_view(), name = 'AdminRegister'),   #3
+    path('register/admin/', AdminRegistrationView.as_view(), name = 'AdminRegister'),   #3
     path('login/student/',StudentloginView.as_view(), name = "Studentlogin"),      #4
     path('login/admin/',AdminloginView.as_view(), name = "Adminlogin"),      #5
     path('student/pending-requests/', PendingRequestView.as_view(), name='pending-requests'),  #6
