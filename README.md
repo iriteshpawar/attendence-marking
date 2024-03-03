@@ -1,1 +1,1 @@
-Ez-Mark Attendence
+attendence marking system
